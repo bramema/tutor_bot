@@ -60,3 +60,7 @@ Permitida    Cerrada (fin)
 - `¿Solicitar Tutoría?` — ahora insensible a mayúsculas y con `.trim()`.
 - `¿Consultar estado?` — insensible a mayúsculas y con nueva rama `false`.
 - `Telegram - Mensaje No Reconocido` — **nodo nuevo**, maneja entradas no válidas.
+
+
+![Vista del proyecto](img/1.png)
+![Vista del proyecto](img/2.png)
