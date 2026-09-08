@@ -1,0 +1,297 @@
+{
+  "name": "TutorBot - Control Horario de Atención",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "c5fbe9d5-06da-4abd-9081-27bf46a40711",
+      "name": "Telegram - Recibir Mensaje",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1232,
+        448
+      ],
+      "webhookId": "62121539-c54a-48cb-9896-a042255f955c",
+      "credentials": {
+        "telegramApi": {
+          "id": "p8PGwbjC69zSY5He",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "solicitar-tutoria",
+              "leftValue": "={{ $json.message.text.trim() }}",
+              "rightValue": "Solicitar Tutoría",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0d1cd83d-4424-4a37-9394-afd4b06cecdc",
+      "name": "¿Solicitar Tutoría?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -992,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "horario-atencion",
+              "leftValue": "={{ $now.weekday >= 1 && $now.weekday <= 5 && $now.hour >= 8 && $now.hour < 18 }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "98a717c8-3443-4ca1-9ab3-78843081f7de",
+      "name": "¿Dentro del horario de atención?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "🌙 Coordinación Cerrada. Nuestro horario de atención es de Lunes a Viernes, 8am a 6pm. ¡Escríbenos mañana!",
+        "additionalFields": {}
+      },
+      "id": "7e71d459-de4a-4f0f-b73f-70f864de58e0",
+      "name": "Telegram - Coordinación Cerrada",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        448
+      ],
+      "webhookId": "5946e44c-f122-4693-8635-2b21b5a754db",
+      "credentials": {
+        "telegramApi": {
+          "id": "p8PGwbjC69zSY5He",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "✅ Estamos dentro del horario de atención. Puedes continuar con tu solicitud de tutoría.",
+        "additionalFields": {}
+      },
+      "id": "5c40c205-1c55-41f3-be2a-2d102183cade",
+      "name": "Telegram - Solicitud Permitida",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        240
+      ],
+      "webhookId": "ae08f07b-9892-4054-9177-7d67b7d1beb4",
+      "credentials": {
+        "telegramApi": {
+          "id": "p8PGwbjC69zSY5He",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "consultar-estado",
+              "leftValue": "={{ $json.message.text.trim() }}",
+              "rightValue": "Consultar estado de tutorías",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "73c54adb-5fbf-4b41-bf5b-79b510003cb7",
+      "name": "¿Consultar estado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "📋 Puedes consultar el estado de tus tutorías. Esta opción está disponible fuera del horario de atención.",
+        "additionalFields": {}
+      },
+      "id": "8987122b-4215-441d-8a5e-f2cdf31f30cb",
+      "name": "Telegram - Consultar Estado",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        640
+      ],
+      "webhookId": "d5700bcf-fbe8-4b70-ae67-bb9e93f39716",
+      "credentials": {
+        "telegramApi": {
+          "id": "p8PGwbjC69zSY5He",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "🤔 No entendí tu mensaje. Por favor selecciona una opción válida: \"Solicitar Tutoría\" o \"Consultar estado de tutorías\".",
+        "additionalFields": {}
+      },
+      "id": "8213fa3c-d684-4b7a-bc4b-4850617cd816",
+      "name": "Telegram - Mensaje No Reconocido",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        832
+      ],
+      "webhookId": "a2e5b8c1-3d4f-4e9a-b7c6-1f0a8d2e6c33",
+      "credentials": {
+        "telegramApi": {
+          "id": "p8PGwbjC69zSY5He",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram - Recibir Mensaje": {
+      "main": [
+        [
+          {
+            "node": "¿Solicitar Tutoría?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Solicitar Tutoría?": {
+      "main": [
+        [
+          {
+            "node": "¿Dentro del horario de atención?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "¿Consultar estado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Dentro del horario de atención?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Solicitud Permitida",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Coordinación Cerrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Consultar estado?": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Consultar Estado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Mensaje No Reconocido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "857a10e7-9ab5-4b43-a3f3-79ef9bff4f13",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1b6593d89b990d88ce72ad0000f1f906d6b0196164e6a3f7dbd1c38069b59ac3"
+  },
+  "nodeGroups": [],
+  "id": "Aqd7G3W6AugbiT8R",
+  "tags": []
+}
